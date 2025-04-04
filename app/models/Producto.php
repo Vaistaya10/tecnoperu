@@ -12,7 +12,8 @@ class Producto
     $this->conexion = Database::getConexion();
   }
 
-  public function getAll(): array{
+  public function getAll(): array
+  {
 
     $result = [];
 
@@ -24,15 +25,15 @@ class Producto
       $stmt->execute();
 
       $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-     catch (\PDOException $e) {
+    } catch (\PDOException $e) {
       throw new Exception($e->getMessage());
     }
 
     return $result;
   }
 
-  public function add($params = []): int{
+  public function add($params = []): int
+  {
     $numRows = 0;
     try {
 
@@ -64,15 +65,37 @@ class Producto
     return 1;
   }
 
-  public function delete(): int
+  public function delete($params = []): int
   {
-    return 1;
+    $numRows = 0;
+
+    try {
+      $sql = "DELETE FROM productos WHERE id = ?"; //eliminar fisica - logica
+      $stmt = $this->conexion->prepare($sql);
+      $stmt->execute(array($params['idproducto']));
+      $numRows = $stmt->rowCount();
+    } catch (PDOException $e) {
+      throw new Exception($e->getMessage());
+    }
+    return $numRows;
   }
 
-  public function getById(): array
-  {
-    return [];
+  public function getById($id): array{
+
+    $result = [];
+    try {
+      $sql = "SELECT * FROM productos WHERE id = ?";
+      $stmt = $this->conexion->prepare($sql);
+      $stmt->execute(array($id));
+      //fetch = OBJETO|NULL
+      //fetchAll = ARRAY[]
+      $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+      throw new Exception($e->getMessage());
+    }
+
+    return $result;
   }
-}
+}//Fin Clase
 
 //TEST 

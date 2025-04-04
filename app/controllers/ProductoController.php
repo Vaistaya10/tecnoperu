@@ -1,5 +1,4 @@
 <?php
-
 //isset = is-set ¿esta asignado? ¿existe?
 if (isset($_SERVER['REQUEST_METHOD'])){
 
@@ -11,7 +10,11 @@ if (isset($_SERVER['REQUEST_METHOD'])){
   
 switch ($_SERVER['REQUEST_METHOD']) {
   case 'GET':
-    echo json_encode($producto->getAll());
+    //sleep(5);
+    //consultas- búsquedas
+    if ($_GET['task'] == 'getAll') {echo json_encode($producto->getAll());}
+    if ($_GET['task'] == 'getById') {echo json_encode($producto->getById($_GET['idproducto']));}
+    
     break;
   
   case 'POST':
@@ -31,6 +34,19 @@ switch ($_SERVER['REQUEST_METHOD']) {
 
     $n = $producto->add($registro);
     echo json_encode(["rows" => $n]); //{"rows" => 1}
+
+    break;
+
+    case 'DELETE';
+    //EL ID viene en la URL => miweb/app/productos/7
+    $url = $_SERVER['REQUEST_URI'];
+    $arrayUrl = explode('/', $url);
+    $idproducto = end($arrayUrl);
+
+    $n = $producto->delete(["idproducto" => $idproducto]); // 0 - 1
+    //TODO lo qye envia BACKEND o FRONTEND debe ir como JSON
+    echo json_encode(["rows"=> $n]);
+    //eso es un array asociativo
 
     break;
 }

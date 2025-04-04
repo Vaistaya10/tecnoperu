@@ -110,12 +110,16 @@
         })
       })
         .then(response => {return response.json()})
-        .then(data =>{console.log(data)})
+        .then(data =>{
+          if(data.rows > 0){
+            formulario.reset();
+          }
+        })
         .catch(error => {console.error(error)});
     }
 
     formulario.addEventListener("submit", function (e) {
-      e.preventDefault();
+      e.preventDefault(); //stop evento submit
 
       if (confirm("¿Desea registrar el producto?")) {
         guardarDato();
